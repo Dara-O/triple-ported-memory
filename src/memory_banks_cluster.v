@@ -118,8 +118,8 @@ module memory_banks_cluster (
     wire    [NUM_BANKS*1-1:0]  postrws_w_en;
 
     // connect srams to memory_bank logic
-    wire    [NUM_BANKS*16-1:0]  sram_rw_dout;
     wire    [NUM_BANKS*16-1:0]  sram_r_dout;
+    wire    [NUM_BANKS*16-1:0]  sram_rw_dout;
 
     memory_bank_logic bank [3:0] (
         .BANK_ID(bank_ids),
@@ -164,6 +164,25 @@ module memory_banks_cluster (
         .postrws_valid (postrws_valid),
         .postrws_w_en  (postrws_w_en)
         
+    );
+
+    sram_1024x16_1rw1r sram [3:0] (
+        .clk (clk),
+
+        // r port
+        .r_addr (postrs_addr ),
+        .r_valid (postrs_valid ),
+
+        .r_data_out (sram_r_dout ),
+
+        // rw port
+        .rw_addr (postrws_addr ),
+        .rw_data_in (postrws_data_in),
+        .rw_w_en (postrws_w_en),
+        .rw_valid (postrws_valid),
+
+        .rw_data_out  (sram_rw_dout)
+      
     );
 
     // for each port select only the valid bank output
