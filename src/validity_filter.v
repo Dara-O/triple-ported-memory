@@ -71,38 +71,49 @@ localparam PORT_ID_INVALID = 0;
                 port1_req_tag_out   = port3_req_tag_in;
             end
             default : begin
-                port1_out           = port1_in;
-                port1_out_valid     = port1_in_valid;
-                port1_id            = PORT_ID_1;
-                port1_req_tag_out   = port1_req_tag_in;
+                port1_out           = 0;
+                port1_out_valid     = 0;
+                port1_id            = 0;
+                port1_req_tag_out   = 0;
             end    
         endcase
         
-        casez({port1_in_valid & port2_in_valid, port3_in_valid})
-            2'b1?  :   begin
+        casez({port1_in_valid, port2_in_valid, port3_in_valid})
+            3'b11?  :   begin
                 port2_out           = port2_in;
                 port2_out_valid     = port2_in_valid;
                 port2_id            = PORT_ID_2;
                 port2_req_tag_out   = port2_req_tag_in;
             end
-            2'b01  : begin
+            3'b011, 3'b101  : begin
                 port2_out           = port3_in;
                 port2_out_valid     = port3_in_valid;
                 port2_id            = PORT_ID_3;
                 port2_req_tag_out   = port3_req_tag_in;
             end
             default : begin
-                port2_out       = port2_in;
-                port2_out_valid = port2_in_valid;
-                port2_id        = PORT_ID_2;
-                port2_req_tag_out   = port2_req_tag_in;
+                port2_out           = 0;
+                port2_out_valid     = 0;
+                port2_id            = 0;
+                port2_req_tag_out   = 0;
             end    
         endcase
         
-        port3_out = port3_in;
-        port3_id  = PORT_ID_3;
-        port3_out_valid = &({port1_in_valid, port2_in_valid, port3_in_valid}) ? port3_in_valid : 0;
-        port3_req_tag_out   = port3_req_tag_in;
+        case(&({port1_in_valid, port2_in_valid, port3_in_valid}))
+            1'b1    :   begin
+                port3_out           = port3_in;
+                port3_out_valid     = port3_in_valid;
+                port3_id            = PORT_ID_3;
+                port3_req_tag_out   = port3_req_tag_in;
+            end
+
+            default : begin
+                port3_out           = 0;
+                port3_out_valid     = 0;
+                port3_id            = 0;
+                port3_req_tag_out   = 0;
+            end
+        endcase
     end
 
 endmodule

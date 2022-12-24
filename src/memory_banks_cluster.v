@@ -107,7 +107,7 @@ module memory_banks_cluster (
     wire    [NUM_BANKS*1-1:0]  postb_port2_valid_out;
     wire    [NUM_BANKS*1-1:0]  postb_port3_valid_out;
 
-    wire    [0:3]   postb_freeze_inputs;
+    wire    [3:0]   postb_freeze_inputs;
 
     // connect memory_bank_logic to srams
     wire    [NUM_BANKS*10-1:0] postrs_addr;
