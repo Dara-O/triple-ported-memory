@@ -1,0 +1,83 @@
+[*]
+[*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
+[*] Thu Dec 22 08:25:57 2022
+[*]
+[dumpfile] "/home/isaac/Documents/Projects/VLSI/triple_ported_memory/RTL/src/triple_ported_memory/triple_ported_memory.srcs/sim_1/new/wave.vcd"
+[dumpfile_mtime] "Thu Dec 22 07:24:38 2022"
+[dumpfile_size] 86124
+[savefile] "/home/isaac/Documents/Projects/VLSI/triple_ported_memory/RTL/src/triple_ported_memory/triple_ported_memory.srcs/sim_1/new/memory_port_logic_template.gtkw"
+[timestart] 0
+[size] 1862 1033
+[pos] -1 -1
+*-18.860741 375000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb.
+[treeopen] tb.dut.
+[treeopen] tb.main.
+[sst_width] 297
+[signals_width] 287
+[sst_expanded] 1
+[sst_vpaned_height] 309
+@29
+tb.main.clk
+@28
+tb.main.reset_n_d
+@200
+-
+-
+@22
+tb.main.port1_addr[11:0]
+tb.main.port1_data_in[15:0]
+@28
+tb.main.port1_req_tag_in[1:0]
+tb.main.port1_valid
+tb.main.port1_wen
+@200
+-
+@22
+tb.main.port1_data_out_s[15:0]
+@28
+tb.main.port1_valid_out_s
+tb.main.port1_req_tag_out_s[1:0]
+@200
+-
+-
+@22
+tb.main.port2_addr[11:0]
+tb.main.port2_data_in[15:0]
+@28
+tb.main.port2_req_tag_in[1:0]
+tb.main.port2_valid
+tb.main.port2_wen
+@200
+-
+@22
+tb.main.port2_data_out_s[15:0]
+@28
+tb.main.port2_valid_out_s
+tb.main.port2_req_tag_out_s[1:0]
+@200
+-
+-
+@22
+tb.main.port3_addr[11:0]
+tb.main.port3_data_in[15:0]
+@28
+tb.main.port3_req_tag_in[1:0]
+tb.main.port3_valid
+tb.main.port3_wen
+@200
+-
+@22
+tb.main.port3_data_out_s[15:0]
+@28
+tb.main.port3_valid_out_s
+tb.main.port3_req_tag_out_s[1:0]
+@200
+-
+-
+@28
+tb.main.freeze_inputs_s
+@200
+-
+[pattern_trace] 1
+[pattern_trace] 0
