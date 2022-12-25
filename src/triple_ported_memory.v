@@ -80,7 +80,7 @@ always @ (posedge clk, negedge reset_n) begin
 end
 
 // connect priority_generator to prioritizer
-wire port_priority;
+wire [2:0] port_priority;
 
 priority_fsm priority_generator(
     .port1_valid(port1_valid_in_reg),
