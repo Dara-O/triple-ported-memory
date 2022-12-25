@@ -2,7 +2,7 @@
 
 module clock_gater(
     input clk, 
-    input enable,
+    input stop_clock,
     
     output gated_clock
 );
@@ -11,7 +11,7 @@ module clock_gater(
 
     always @(*) begin
         if(~clk) begin
-            clock_prop = enable;
+            clock_prop = ~stop_clock;
         end
     end
 
