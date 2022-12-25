@@ -1,5 +1,10 @@
 `timescale 1ns/1ps
 
+/*
+    Usage Notes:
+    - Allow for 7-cycles after the last input to ensure all requested values are read
+*/
+
 module triple_ported_memory (
     input   wire    [11:0]      port1_addr,
     input   wire    [11:0]      port2_addr,
