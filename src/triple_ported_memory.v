@@ -83,6 +83,9 @@ end
 // connect priority_generator to prioritizer
 wire [2:0] port_priority;
 
+// connect bank_cluster to input flop
+wire    postbc_freeze_inputs;
+
 priority_fsm priority_generator(
     .port1_valid(port1_valid_in_reg),
     .port2_valid(port2_valid_in_reg),
@@ -90,6 +93,7 @@ priority_fsm priority_generator(
 
     .clk(clk),
     .reset_n(reset_n),
+    .halt(postbc_freeze_inputs),
 
     .port_priority(port_priority)
 );
@@ -147,8 +151,7 @@ wire                postbc_port2_valid;
 wire                postbc_port3_valid;
 
 
-// connect bank_cluster to input flop
-wire    postbc_freeze_inputs;
+
 assign freeze_inputs = postbc_freeze_inputs;
 
 memory_banks_cluster bank_cluster(
