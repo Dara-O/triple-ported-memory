@@ -19,6 +19,7 @@ module triple_ported_memory (
 
     input   wire                clk,
     input   wire                reset_n,
+    input   wire                halt, 
 
     output  wire    [15:0]      port1_data_out,
     output  wire    [15:0]      port2_data_out,
@@ -118,6 +119,7 @@ port_prioritizer #(.WIDTH(29)) prioritizer (
     .port2_valid(port2_valid_in_reg),
     .port3_data({port3_addr_reg, port3_data_in_reg, port3_wen_reg}),
     .port3_valid(port3_valid_in_reg),
+    .port_priority(port_priority),
 
     .priority1_data({postp_port1_addr, postp_port1_data_in, postp_port1_wen}),
     .priority1_valid(postp_port1_valid_in),
@@ -172,6 +174,7 @@ memory_banks_cluster bank_cluster(
 
     .clk(clk),
     .reset_n(reset_n),
+    .halt(halt),
 
     .port1_req_tag_out(postbc_port1_orig_id),
     .port2_req_tag_out(postbc_port2_orig_id),
