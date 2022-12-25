@@ -45,10 +45,6 @@ module validity_mask(
     output  reg     [0:0]       masked_port3_valid
 );
 
-assign masked_port1_req_tag_in = port1_req_tag_in;
-assign masked_port2_req_tag_in = port2_req_tag_in;
-assign masked_port3_req_tag_in = port3_req_tag_in;
-
 wire port1_match = (port1_addr[1:0] === BANK_ID) & port1_valid;
 wire port2_match = (port2_addr[1:0] === BANK_ID) & port2_valid;
 wire port3_match = (port3_addr[1:0] === BANK_ID) & port3_valid;
@@ -58,6 +54,7 @@ always @ (*) begin
     
     case (port1_match)
         1'b1        :   begin
+            masked_port1_req_tag_in = port1_req_tag_in;
             masked_port1_addr       = port1_addr[11:2];   
             masked_port1_data_in    = port1_data_in;
             masked_port1_wen        = port1_wen;
@@ -65,6 +62,7 @@ always @ (*) begin
         end    
 
         default     :   begin
+            masked_port1_req_tag_in = 0;
             masked_port1_addr       = 0;
             masked_port1_data_in    = 0;
             masked_port1_wen        = 0;
@@ -75,6 +73,7 @@ always @ (*) begin
 
     case (port2_match)
         1'b1        :   begin
+            masked_port2_req_tag_in = port2_req_tag_in;
             masked_port2_addr       = port2_addr[11:2];   
             masked_port2_data_in    = port2_data_in;
             masked_port2_wen        = port2_wen;
@@ -82,6 +81,7 @@ always @ (*) begin
         end    
 
         default     :   begin
+            masked_port2_req_tag_in = 0;
             masked_port2_addr       = 0;
             masked_port2_data_in    = 0;
             masked_port2_wen        = 0;
@@ -92,6 +92,7 @@ always @ (*) begin
 
     case (port3_match)
         1'b1        :   begin
+            masked_port3_req_tag_in = port3_req_tag_in;
             masked_port3_addr       = port3_addr[11:2];   
             masked_port3_data_in    = port3_data_in;
             masked_port3_wen        = port3_wen;
@@ -99,6 +100,7 @@ always @ (*) begin
         end    
 
         default     :   begin
+            masked_port3_req_tag_in = 0;
             masked_port3_addr       = 0;
             masked_port3_data_in    = 0;
             masked_port3_wen        = 0;
