@@ -91,6 +91,16 @@ program main_program(
         shift = 2; // set to 2 to perform sequential bank hit 
         reset();
         
+        // set priority
+        write_p123(
+            'h0,        'h1,        'h2,
+            'h0,        'h0,        'h0,
+            'h0,        'h1,        'h1
+        );
+        @(posedge drive_clk);
+        @(posedge sample_clk);
+        wait(freeze_inputs_s == 'h0);
+
         // coarse-grain write then read
         for(int i = 0; i < 5; i = i +1) begin
             write_p123(
