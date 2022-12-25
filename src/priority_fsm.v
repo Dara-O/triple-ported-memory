@@ -9,6 +9,7 @@ module priority_fsm(
 
     input   wire            clk,
     input   wire            reset_n,
+    input   wire            halt, 
 
     output  reg     [2:0]   port_priority
 );
@@ -19,7 +20,7 @@ always @ (posedge clk, negedge reset_n) begin
     if(~reset_n) begin
         port_priority <= PRIORITY_123;
     end
-    else begin
+    else if(~halt) begin
         port_priority <= port_priority_nxt;
     end
 end
