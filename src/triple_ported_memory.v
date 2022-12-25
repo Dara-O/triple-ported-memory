@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module tripple_ported_memory (
+module triple_ported_memory (
     input   wire    [11:0]      port1_addr,
     input   wire    [11:0]      port2_addr,
     input   wire    [11:0]      port3_addr,
