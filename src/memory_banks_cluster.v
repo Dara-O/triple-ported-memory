@@ -43,9 +43,9 @@ module memory_banks_cluster (
     output  reg     [15:0]      port2_data_out,
     output  reg     [15:0]      port3_data_out,
 
-    output  reg     [0:0]       port1_valid_out,
-    output  reg     [0:0]       port2_valid_out,
-    output  reg     [0:0]       port3_valid_out,
+    output  reg                 port1_valid_out,
+    output  reg                 port2_valid_out,
+    output  reg                 port3_valid_out,
 
     output  wire                freeze_inputs
 );
