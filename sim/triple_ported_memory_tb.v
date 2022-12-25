@@ -88,7 +88,7 @@ program main_program(
 
     task test_sequence();
         int shift;
-        shift = 2; // set to 2 to perform sequential bank hit 
+        shift = 0; // set to 2 to perform sequential bank hit 
         reset();
         
         // set priority
@@ -137,37 +137,41 @@ program main_program(
         repeat(1) @(posedge drive_clk);
         @(posedge sample_clk);
         wait(freeze_inputs_s === 'h0);
+        
+        halt_d = 1;
+        repeat(1) @(posedge drive_clk);
 
-        // // fine-grain write then read
-        // for(int i = 10; i < 15; i = i + 1) begin
-        //     write_p123( 
-        //             ('h1 << shift)+i*3,    ('h2 << shift)+i*3,    ('h3 << shift)+i*3, 
-        //             'h11+i, 'h12+i, 'h13+i, 
-        //             'h1, 'h1, 'h1
-        //     );
-        //     repeat(1) @(posedge drive_clk);
+
+        // fine-grain write then read
+        for(int i = 10; i < 15; i = i + 1) begin
+            write_p123( 
+                    ('h1 << shift)+i*3,    ('h2 << shift)+i*3,    ('h3 << shift)+i*3, 
+                    'h11+i, 'h12+i, 'h13+i, 
+                    'h1, 'h1, 'h1
+            );
+            repeat(1) @(posedge drive_clk);
             
-        //     @(posedge sample_clk);
-        //     wait(freeze_inputs_s === 'h0);
+            @(posedge sample_clk);
+            wait(freeze_inputs_s === 'h0);
 
-        //     read_p123(  
-        //             ('h1 << shift)+i*3,    ('h2 << shift)+i*3,    ('h3 << shift)+i*3, 
-        //             'h1, 'h1, 'h1
-        //     );
-        //     repeat(1) @(posedge drive_clk);
+            read_p123(  
+                    ('h1 << shift)+i*3,    ('h2 << shift)+i*3,    ('h3 << shift)+i*3, 
+                    'h1, 'h1, 'h1
+            );
+            repeat(1) @(posedge drive_clk);
 
-        //     @(posedge sample_clk);
-        //     wait(freeze_inputs_s === 'h0);
-        // end
+            @(posedge sample_clk);
+            wait(freeze_inputs_s === 'h0);
+        end
 
-        // read_p123(  
-        //     'h0,    'h0,        'h0, 
-        //     'h0,    'h0,        'h0
-        // );
+        read_p123(  
+            'h0,    'h0,        'h0, 
+            'h0,    'h0,        'h0
+        );
 
-        // repeat(1) @(posedge drive_clk);
-        // @(posedge sample_clk);
-        // wait(freeze_inputs_s === 'h0);
+        repeat(1) @(posedge drive_clk);
+        @(posedge sample_clk);
+        wait(freeze_inputs_s === 'h0);
 
         repeat(10) @(posedge drive_clk);
 
@@ -323,6 +327,7 @@ program main_program(
         port2_valid_in      <= port2_valid_in_d;
         port3_valid_in      <= port3_valid_in_d;
         reset_n             <= reset_n_d;
+        halt                <= halt_d;
     endtask
 
     task init();
