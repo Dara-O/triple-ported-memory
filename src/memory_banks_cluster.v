@@ -24,13 +24,13 @@ module memory_banks_cluster (
     input   wire    [15:0]      port2_data_in,
     input   wire    [15:0]      port3_data_in,
 
-    input   wire    [0:0]       port1_wen,
-    input   wire    [0:0]       port2_wen,
-    input   wire    [0:0]       port3_wen,
+    input   wire                port1_wen,
+    input   wire                port2_wen,
+    input   wire                port3_wen,
 
-    input   wire    [0:0]       port1_valid,
-    input   wire    [0:0]       port2_valid,
-    input   wire    [0:0]       port3_valid,
+    input   wire                port1_valid,
+    input   wire                port2_valid,
+    input   wire                port3_valid,
 
     input   wire                clk,
     input   wire                reset_n,
