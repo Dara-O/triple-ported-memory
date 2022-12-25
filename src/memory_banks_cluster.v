@@ -34,6 +34,7 @@ module memory_banks_cluster (
 
     input   wire                clk,
     input   wire                reset_n,
+    input   wire                halt, 
 
     output  reg     [1:0]       port1_req_tag_out,
     output  reg     [1:0]       port2_req_tag_out,
@@ -48,7 +49,16 @@ module memory_banks_cluster (
     output  reg                 port3_valid_out,
 
     output  wire                freeze_inputs
-);
+);  
+
+    wire gated_clock;
+
+    clock_gater cg (
+        .clk(clk),
+        .stop_clock(halt), 
+
+        .gated_clock(gated_clock)
+    );
     
     wire    [1:0]       masked_port1_req_tag_in;
     wire    [1:0]       masked_port2_req_tag_in;
@@ -88,7 +98,7 @@ module memory_banks_cluster (
     );
     
 
-    assign freeze_inputs = |postb_freeze_inputs;
+    assign freeze_inputs = (|postb_freeze_inputs) | halt;
 
     localparam NUM_BANKS = 4;
 
@@ -139,7 +149,7 @@ module memory_banks_cluster (
         .port2_valid (masked_port2_valid),
         .port3_valid (masked_port3_valid),
 
-        .clk (clk ),
+        .clk (gated_clock ),
         .reset_n (reset_n ),
 
         .port1_req_tag_out (postb_port1_req_tag_out),
@@ -167,7 +177,7 @@ module memory_banks_cluster (
     );
 
     sram_1024x16_1rw1r sram [3:0] (
-        .clk (clk),
+        .clk (gated_clock),
 
         // r port
         .r_addr (postrs_addr ),
