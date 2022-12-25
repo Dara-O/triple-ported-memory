@@ -2,27 +2,27 @@
 
 `include "shared_params.vh"
 
-module port_deprioritizer(
-    input   wire    [1:0]       port1_orig_id,
-    input   wire    [1:0]       port2_orig_id,
-    input   wire    [1:0]       port3_orig_id,
+module port_deprioritizer #(parameter WIDTH = 8) (
+    input   wire    [1:0]           port1_orig_id,
+    input   wire    [1:0]           port2_orig_id,
+    input   wire    [1:0]           port3_orig_id,
 
-    input   wire    [15:0]      port1_data_in,
-    input   wire    [15:0]      port2_data_in,
-    input   wire    [15:0]      port3_data_in,
+    input   wire    [WIDTH-1:0]     port1_data_in,
+    input   wire    [WIDTH-1:0]     port2_data_in,
+    input   wire    [WIDTH-1:0]     port3_data_in,
 
-    input   wire                port1_valid_in,
-    input   wire                port2_valid_in,
-    input   wire                port3_valid_in,
+    input   wire                    port1_valid_in,
+    input   wire                    port2_valid_in,
+    input   wire                    port3_valid_in,
 
 
-    output  reg     [15:0]      port1_data_out,
-    output  reg     [15:0]      port2_data_out,
-    output  reg     [15:0]      port3_data_out,
+    output  reg     [WIDTH-1:0]     port1_data_out,
+    output  reg     [WIDTH-1:0]     port2_data_out,
+    output  reg     [WIDTH-1:0]     port3_data_out,
 
-    output  reg                 port1_valid_out,
-    output  reg                 port2_valid_out,
-    output  reg                 port3_valid_out
+    output  reg                     port1_valid_out,
+    output  reg                     port2_valid_out,
+    output  reg                     port3_valid_out
 );
 
     always @ (*) begin
