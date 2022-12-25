@@ -299,3 +299,4 @@ vivado_tool_testing/tool_testing/openram_memory_macro/output/sram_16_1024_sky130
 vivado_tool_testing/tool_testing/openram_memory_macro/output/sram_16_1024_sky130A.v
 sim/wave.vcd
 sim/a.out
+diagrams/port_deprioritizer.svg
