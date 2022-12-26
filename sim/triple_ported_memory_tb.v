@@ -91,22 +91,33 @@ program main_program(
         shift = 0; // set to 2 to perform sequential bank hit 
         reset();
         
-        // set priority
-        write_p123(
-            'h0,        'h1,        'h2,
-            'h0,        'h0,        'h0,
-            'h0,        'h1,        'h1
-        );
-        @(posedge drive_clk);
-        @(posedge sample_clk);
-        wait(freeze_inputs_s == 'h0);
+        // same_bank_conflict(
+        //     1'h1, 1'h1, 1'h1, 
+        //     16'd8,
+        //     2'd2
+        // );
 
-        // coarse-grain write then read
-        for(int i = 0; i < 5; i = i +1) begin
+        rolling_bank_conflict(
+            1'h1, 1'h0, 1'h1, 
+            16'd8
+        );
+
+        repeat(10) @(posedge drive_clk);
+
+    endtask
+
+    task rolling_bank_conflict(
+        input   logic           port1_valid,
+        input   logic           port2_valid,
+        input   logic           port3_valid,
+        input   logic   [15:0]  num_iters
+    );
+
+        for(int i = 0; i < num_iters; i = i+1) begin
             write_p123(
-                ('h1 << shift)+i*3,    ('h2 << shift)+i*3,    ('h3 << shift)+i*3,
-                'h11+i,     'h12+i,     'h13+i,
-                'h1,        'h1,        'h1
+                'd0+i,    num_iters+'d4+i,    2*num_iters+'d8+i,
+                'h11+i,     'h22+i,     'h33+i,
+                port1_valid,port2_valid,port3_valid
             );
 
             @(posedge drive_clk);
@@ -115,65 +126,140 @@ program main_program(
             wait(freeze_inputs_s == 'h0);
         end
 
-        @(posedge sample_clk);
-        wait(freeze_inputs_s === 'h0);
-
-        for(int i = 0; i < 5; i = i + 1) begin
-            read_p123(  
-                ('h1 << shift)+i*3,    ('h2 << shift)+i*3,    ('h3 << shift)+i*3, 
-                'h1,        'h1,        'h1
+        for(int i = 0; i < num_iters; i = i+1) begin
+            read_p123(
+                'd0+i,    num_iters+'d4+i,    2*num_iters+'d8+i,
+                port1_valid,port2_valid,port3_valid
             );
+
             @(posedge drive_clk);
 
             @(posedge sample_clk);
-            wait(freeze_inputs_s === 'h0);
+            wait(freeze_inputs_s == 'h0);
         end
 
+        // marker in simulation
         read_p123(  
             'h0,    'h0,        'h0, 
             'h0,    'h0,        'h0
         );
 
-        repeat(1) @(posedge drive_clk);
+        repeat(2) @(posedge drive_clk);
         @(posedge sample_clk);
-        wait(freeze_inputs_s === 'h0);
-        
-        halt_d = 1;
-        repeat(1) @(posedge drive_clk);
+        wait(freeze_inputs_s == 'h0);
 
+        for(int i = 4*num_iters; i < 5*num_iters; i = i+1) begin
+            write_p123(
+                'd0+i,    num_iters+'d4+i,    2*num_iters+'d8+i,
+                'h11+i,     'h12+i,     'h13+i,
+                port1_valid,port2_valid,port3_valid
+            );
+
+            @(posedge drive_clk);
+
+            @(posedge sample_clk);
+            wait(freeze_inputs_s == 'h0);
+
+            read_p123(
+                'd0+i,    num_iters+'d4+i,    2*num_iters+'d8+i,
+                port1_valid,port2_valid,port3_valid
+            );
+
+            @(posedge drive_clk);
+
+            @(posedge sample_clk);
+            wait(freeze_inputs_s == 'h0);
+        end
+
+        // marker in simulation
+        read_p123(  
+            'h0,    'h0,        'h0, 
+            'h0,    'h0,        'h0
+        );
+
+        repeat(2) @(posedge drive_clk);
+        @(posedge sample_clk);
+        wait(freeze_inputs_s == 'h0);
+
+    endtask
+
+    task same_bank_conflict(
+        input   logic           port1_valid,
+        input   logic           port2_valid,
+        input   logic           port3_valid,
+        input   logic   [15:0]  num_iters,
+        input   logic   [1:0]   target_bank
+    );
+        
+        // coarse-grain write then read
+        for(int i = 0; i < num_iters*4; i = i +4) begin
+            write_p123(
+                'd0+i+target_bank,    num_iters*4+i+target_bank,    2*num_iters*4+i+target_bank,
+                'h11+i,     'h12+i,     'h13+i,
+                port1_valid,port2_valid,port3_valid
+            );
+
+            @(posedge drive_clk);
+
+            @(posedge sample_clk);
+            wait(freeze_inputs_s == 'h0);
+        end
+
+        for(int i = 0; i < num_iters*4; i = i +4) begin
+            read_p123(
+                'd0+i+target_bank,    num_iters*4+i+target_bank,    2*num_iters*4+i+target_bank,
+                port1_valid,port2_valid,port3_valid
+            );
+
+            @(posedge drive_clk);
+
+            @(posedge sample_clk);
+            wait(freeze_inputs_s == 'h0);
+        end
+
+        // marker in simulation
+        read_p123(  
+            'h0,    'h0,        'h0, 
+            'h0,    'h0,        'h0
+        );
+
+        repeat(2) @(posedge drive_clk);
+        @(posedge sample_clk);
+        wait(freeze_inputs_s == 'h0);
 
         // fine-grain write then read
-        for(int i = 10; i < 15; i = i + 1) begin
-            write_p123( 
-                    ('h1 << shift)+i*3,    ('h2 << shift)+i*3,    ('h3 << shift)+i*3, 
-                    'h11+i, 'h12+i, 'h13+i, 
-                    'h1, 'h1, 'h1
+        for(int i = 12*num_iters*4; i < 12*num_iters*4+num_iters*4; i = i +4) begin // needs refinement
+            write_p123(
+                'd0+i+target_bank,    num_iters*4+i+target_bank,    2*num_iters*4+i+target_bank,
+                'h31+i,     'h32+i,     'h33+i,
+                port1_valid,port2_valid,port3_valid
             );
-            repeat(1) @(posedge drive_clk);
-            
-            @(posedge sample_clk);
-            wait(freeze_inputs_s === 'h0);
 
-            read_p123(  
-                    ('h1 << shift)+i*3,    ('h2 << shift)+i*3,    ('h3 << shift)+i*3, 
-                    'h1, 'h1, 'h1
-            );
-            repeat(1) @(posedge drive_clk);
+            @(posedge drive_clk);
 
             @(posedge sample_clk);
-            wait(freeze_inputs_s === 'h0);
+            wait(freeze_inputs_s == 'h0);
+
+            read_p123(
+                'd0+i+target_bank,    num_iters*4+i+target_bank,    2*num_iters*4+i+target_bank,
+                port1_valid,port2_valid,port3_valid
+            );
+
+            @(posedge drive_clk);
+
+            @(posedge sample_clk);
+            wait(freeze_inputs_s == 'h0);
         end
 
+        // marker in simulation
         read_p123(  
             'h0,    'h0,        'h0, 
             'h0,    'h0,        'h0
         );
 
-        repeat(1) @(posedge drive_clk);
+        repeat(2) @(posedge drive_clk);
         @(posedge sample_clk);
-        wait(freeze_inputs_s === 'h0);
-
-        repeat(10) @(posedge drive_clk);
+        wait(freeze_inputs_s == 'h0);
 
     endtask
 
