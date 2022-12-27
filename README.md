@@ -9,7 +9,7 @@ Multi-banking is one of the techniques used to increase the number of ports of a
 When different ports request access the same bank (a.k.a. a bank conflict), the requests must arbitrated and perhaps serialized. This module uses a dynamic arcbitration scheme to serialize conflicting accesses.
 
 ## How are Bank Conflicts Resolved
-Bank conflicts are resolved using a dynamic priority scheme based on the frequency of memory requests from each port. The port that accesses the memory most frequently is served first. For read requests, the top two most frequent ports are served first
+Bank conflicts are resolved using a dynamic priority scheme based on the frequency of memory requests from each port. The port that accesses the memory most frequently is served first. For read requests, the top two most frequent ports are served first.
 
 
 ## Top-level Interface
@@ -30,9 +30,14 @@ The triple ported memory module can also be halted externally using the `halt` i
 The memory module can also request that the elements driving its inputs be frozen using the `freeze_inputs` output pin. 
 
 ## Architecture
-TODO: Insert diagrams
+
+![Top-level architecture of the Triple Ported Memory](diagrams/tripple_ported_memory_arch.png "Top-level architecture of the Triple Ported Memory")
 
 ## Usage
-
+This
 ## OpenLane Physical Implementation
+The physical design for this memory modules was performed using [OpenLane](https://github.com/The-OpenROAD-Project/OpenLane) RTL-to-GDSII flow on SKY130 PDK. A hierarchical design methodology was employed with two macros:
+
+- Memory Bank Logic (HARDENED)
+- SKY130 SRAM MARCO (sky130_sram_1kbyte_1rw1r_8x1024_8)
 
