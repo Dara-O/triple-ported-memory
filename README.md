@@ -51,7 +51,8 @@ Due to computing resource constraints, the signoff stages of the OpenLane flow c
 
 ### Floorplan:
 ![](diagrams/physical_design/floor_plan_tight_design.png "Floor Plan showing sram macros and hardened memory bank logic")
-The 8 larger blocks are the SKY130 sram macros. Two SRAM macros are are needed to provide a 16-bit word size for each bank.
+<p style="text-align: center;">Floorplan showing sram macros and memory bank logic macros</p>
+The eight larger blocks are the SKY130 sram macros. Two SRAM macros are are needed to provide a 16-bit word size for each bank.
 
 The four smaller blocks are the hardnend memory bank logic macros. This 
 
