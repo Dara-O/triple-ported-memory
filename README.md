@@ -30,8 +30,13 @@ The triple ported memory module can also be halted externally using the `halt` i
 The memory module can also request that the elements driving its inputs be frozen using the `freeze_inputs` output pin. 
 
 ## Architecture
+### Top-level
+![Top-level architecture of the Triple Ported Memory](diagrams/tripple_ported_memory_arch.png)
 
-![Top-level architecture of the Triple Ported Memory](diagrams/tripple_ported_memory_arch.png "Top-level architecture of the Triple Ported Memory")
+<p style="text-align: center;">Top-level architecture of the Triple Ported Memory</p>
+
+### Memory Bank Cluster
+TODO: Add diagram
 
 ## Usage
 This
@@ -40,4 +45,9 @@ The physical design for this memory modules was performed using [OpenLane](https
 
 - Memory Bank Logic (HARDENED)
 - SKY130 SRAM MARCO (sky130_sram_1kbyte_1rw1r_8x1024_8)
+
+### Floorplan:
+![](diagrams/physical_design/floor_plan_tight_design.png "Floor Plan showing sram macros and hardened memory bank logic")
+The 8 larger blocks are the SKY130 sram macros. Two SRAM macros are are needed to provide a 16-bit word size for each bank.
+The four smaller blocks are the hardnend memory bank logic macros. This 
 
