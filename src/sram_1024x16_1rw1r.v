@@ -18,12 +18,14 @@ module sram_1024x16_1rw1r (
     output  [15:0]      rw_data_out
 );
     
+    wire [0:0] wmask_tie_off = 1'b1;
+
     sky130_sram_1kbyte_1rw1r_8x1024_8 sram_high(
         // rw port
         .clk0(clk),
         .csb0 (~rw_valid),
         .web0 (~rw_w_en),
-        .wmask0 (1'b1),
+        .wmask0 (wmask_tie_off),
         .addr0 (rw_addr),
         .din0 (rw_data_in[15:8]),
 
@@ -43,7 +45,7 @@ module sram_1024x16_1rw1r (
         .clk0(clk),
         .csb0 (~rw_valid),
         .web0 (~rw_w_en),
-        .wmask0 (1'b1),
+        .wmask0 (wmask_tie_off),
         .addr0 (rw_addr),
         .din0 (rw_data_in[7:0]),
 
