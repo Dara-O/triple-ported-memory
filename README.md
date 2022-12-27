@@ -35,8 +35,10 @@ The memory module can also request that the elements driving its inputs be froze
 
 <p style="text-align: center;">Top-level architecture of the Triple Ported Memory</p>
 
+Dashed line represents `valid` signals while other signals a represented using the solid arrow.
+
 ### Memory Bank Cluster
-TODO: Add diagram
+![Simplified Memory Bank Cluster Architecture](diagrams/memory_bank_cluster_arch.png)
 
 ## Usage
 This
@@ -44,10 +46,15 @@ This
 The physical design for this memory modules was performed using [OpenLane](https://github.com/The-OpenROAD-Project/OpenLane) RTL-to-GDSII flow on SKY130 PDK. A hierarchical design methodology was employed with two macros:
 
 - Memory Bank Logic (HARDENED)
-- SKY130 SRAM MARCO (sky130_sram_1kbyte_1rw1r_8x1024_8)
+- SKY130 SRAM macro (sky130_sram_1kbyte_1rw1r_8x1024_8)
 
 ### Floorplan:
 ![](diagrams/physical_design/floor_plan_tight_design.png "Floor Plan showing sram macros and hardened memory bank logic")
 The 8 larger blocks are the SKY130 sram macros. Two SRAM macros are are needed to provide a 16-bit word size for each bank.
+
 The four smaller blocks are the hardnend memory bank logic macros. This 
 
+### Routed Design
+**TODO**
+### Post-Layout STA
+With a target frequency is 50 Mhz, OpenLane reports a worse setup slack of **TODO** 
