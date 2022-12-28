@@ -11,7 +11,6 @@ When different ports request access the same bank (a.k.a. a bank conflict), the 
 ## How are Bank Conflicts Resolved
 Bank conflicts are resolved using a dynamic priority scheme based on the frequency of memory requests from each port. The port that accesses the memory most frequently is served first. For read requests, the top two most frequent ports are served first.
 
-
 ## Top-level Interface
 In addition to a clock (`clk`) and an active-low reset (`reset_n`) pin, each port contains the following:
 - Input
@@ -29,6 +28,18 @@ The triple ported memory module can also be halted externally using the `halt` i
 
 The memory module can also request that the elements driving its inputs be frozen using the `freeze_inputs` output pin. 
 
+## Sample Use-Case Waveforms
+### Coarse-Grain Writes then Reads with No Bank Conflict
+
+### Conflicting Coarse-grain Writes then Reads with Consecutive Bank Conflicts
+
+### Fine-Grain writes then reads with No Bank Conflict
+
+### Fine-Grain Writes then Readswith Consecutive Bank Conflicts
+
+### Demonstration of Dynamic Priority Arbitration
+
+
 ## Architecture
 ### Top-level
 ![Top-level architecture of the Triple Ported Memory](diagrams/tripple_ported_memory_arch.png)
@@ -44,19 +55,32 @@ Dashed line represents `valid` signals while other signals a represented using t
 ## OpenLane Physical Implementation
 The physical design for this memory modules was performed using [OpenLane](https://github.com/The-OpenROAD-Project/OpenLane) RTL-to-GDSII flow on SKY130 PDK. A hierarchical design methodology was employed with two macros:
 
-- Memory Bank Logic (HARDENED)
+- Memory Bank Logic (hardened)
 - SKY130 SRAM macro (sky130_sram_1kbyte_1rw1r_8x1024_8)
 
-Due to computing resource constraints, the signoff stages of the OpenLane flow could not be executed. There are also a few issues to be resolved regarding the tooling.
+Due to computing resource constraints, the DRC stages of the OpenLane flow could not be executed. There are also a some issues regarding the extracted timing models for the hardened macros.
 
-### Floorplan:
+### **Final Design Metrics**:
+- **Die Area**: 4.998 mm<sup>2</sup>
+- **Core Area**: 4.9166 mm<sup>2</sup>
+- **Frequency**: 25 MHz
+- **Core Utilization**: 43%
+
+Please note that rigorous design exploration has NOT been conducted.
+
+### **Floorplan**:
 ![](diagrams/physical_design/floor_plan_tight_design.png "Floor Plan showing sram macros and hardened memory bank logic")
 <p style="text-align: center;">Floorplan showing sram macros and memory bank logic macros</p>
-The eight larger blocks are the SKY130 sram macros. Two SRAM macros are are needed to provide a 16-bit word size for each bank.
+The eight larger blocks are the SKY130 sram macros. Two SRAM macros are are needed to provide a 16-bit word size for each bank. The four smaller blocks are the hardnend memory bank logic macros.
+<br> 
+<br>
 
-The four smaller blocks are the hardnend memory bank logic macros. This 
+### **Routed Design**
+![Fully Routed Design in OpenROAD Gui](diagrams/physical_design/routed_design_openroad.png "Fully Routed Design in OpenROAD Gui")
+<p style="text-align: center;">Fully Routed Design in OpenROAD Gui</p>
 
-### Routed Design
-**TODO**
-### Post-Layout STA
-With a target frequency is 50 Mhz, OpenLane reports a worst setup slack of 7.85 ns and a worst hold slack of 0.35 ns.
+### Final GDS 
+![Final GDS rendered in Klayout with some layers hidden](diagrams/physical_design/final_gds_klayout.png "Final GDS rendered in Klayout with some layers hidden")
+<p style="text-align: center;">Final GDS rendered in Klayout</p>
+
+
