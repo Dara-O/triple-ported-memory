@@ -303,3 +303,4 @@ diagrams/port_deprioritizer.svg
 diagrams/tripple_ported_memory.svg
 sim/triple_ported_memory_template.gtkw
 diagrams/triple_ported_memory_private.drawio
+sim/triple_ported_memory_template_gh.gtkw
