@@ -103,6 +103,56 @@ The eight larger blocks are the SKY130 sram macros. Two SRAM macros are are need
 ![Final GDS rendered in Klayout with some layers hidden](diagrams/physical_design/final_gds_klayout.png "Final GDS rendered in Klayout with some layers hidden")
 <div align="center">Final GDS rendered in Klayout</div>
 
-### OpenLane Learnings
-After spending many hours fighting with the OpenLane RTL-to-GDS flow, I thought it best to share my findings and workarounds.
+## OpenLane Learnings
+After spending many hours fighting with the OpenLane RTL-to-GDS flow, I thought it best to share my findings and workarounds. These lessons were written as future notes for myself and as such they may not apply to your specific scenario or requirements.
+
+### 1. Pre-elaborating Integrated Core RTL
+**Motivation:** The OpenLane doesn't handle brackets ( "[" , "]") in the "FP_PDN_MACRO_HOOKS" configuration variable correctly. Whenever brackets are present, the macros aren't connected to the power grid. Brackets are used to identify blocks created using generate statements or instance arrays. Pre-elaborating the integrated core will allow us to change the brackets to something that won't break "FP_PDN_MACRO_HOOKS". Underscores can be used. I have verified that this workaround works.  
+
+**Steps:**
+
+- After finalizing the design, it is assumed you have the following directories in your work area: 
+
+    - `src/`
+
+        - Contains verilog source files and header files. May contain files that will be come macros. 
+
+    - `import/`
+
+        - Contains verilog files for macros used in simulation (eg: sky130 sram macros) 
+
+    - `sim/` 
+        - Containing testbenches and files needed for simulation only. 
+
+- Harden the desired macros 
+
+- After hardening each of the macros, in the ~/OpenLane/designs/<design>/ directory for the final chip/core, create and populate the following directories 
+
+    - `import/`
+
+        - In this directory, place black box verilog files for each of the hardened macros. 
+
+    - `src/` 
+
+        - In this directory, place non-macro verilog files and associated header files 
+
+- Using yosys, elaborate the design using the files in the OpenLane "import" and "src" directories you just created (see above),  
+
+    - ```read_verilog -Isrc/ src/*.v import/*.v ```
+
+    - ```hierarchy –top <top_module>```
+
+    - ```write_verilog -noattr <elab>.v```
+
+ 
+- You can make formatting changes to the <elab>.v file to make the openlane flow work correctly. 
+
+    -  For example you can remover brackets ("[" , "]") from <elab>.v which ensures that "FP_PDN_MACRO_HOOKS" works correctly. The brackets can be changed to underscores. 
+
+- Change the instance names of modules in the file referenced by "MACRO_PLACEMENT_CFG". The instance names in the file needs to match the instance names in the netlist synthesized by openlane. 
+
+- In the config.json file for the OpenLane project, use  <elab>.v as the verilog source (specified by the "VERILOG_FILES" key), Follow the usual chip integration for the remaining steps in the flow ([Openlane Tutorials](https://openlane.readthedocs.io/en/latest/tutorials/openram.html))
+
+### 2. LVS Issues with bundled sky130_sram_1kbyte_1rw1r_8x1024_8 SRAM macro
+I found that the flow kept breaking due to a some LVS issues with the sky130_sram_1kbyte_1rw1r_8x1024_8 SRAM macro that came with OpenLane. I rebuilt an equiavlent macro using OpenRAM and flow completed sucessfully. 
 
