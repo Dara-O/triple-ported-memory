@@ -103,4 +103,6 @@ The eight larger blocks are the SKY130 sram macros. Two SRAM macros are are need
 ![Final GDS rendered in Klayout with some layers hidden](diagrams/physical_design/final_gds_klayout.png "Final GDS rendered in Klayout with some layers hidden")
 <p style="text-align: center;">Final GDS rendered in Klayout</p>
 
+### OpenLane Learnings
+After spending many hours fighting with the OpenLane RTL-to-GDS flow, I thought it best to share my findings and workarounds.
 
