@@ -24,23 +24,43 @@ In addition to a clock (`clk`) and an active-low reset (`reset_n`) pin, each por
 
 The reset pin is not used to initialize the memory array, but rather, it is used to initilize the sequential elements and pipeline flip-flops. 
 
-The triple ported memory module can also be halted externally using the `halt` input pin. While halted, the outputs of the memory modules are frozen and so are the internal sequential elements.
+The triple ported memory module can also be halted externally using the `halt` input pin. While halted, the outputs of the memory modules are frozen and so are the internal sequential elements. The `halt` port also gates the clock to the SRAMs and memory bank logic.
 
 The memory module can also request that the elements driving its inputs be frozen using the `freeze_inputs` output pin. 
 
 ## Sample Use-Case Waveforms
-### Coarse-Grain Writes then Reads with No Bank Conflict
+All simulations were run using [Icarus Verilog](http://iverilog.icarus.com/)
 
-### Conflicting Coarse-grain Writes then Reads with Consecutive Bank Conflicts
+### Coarse-grain Writes then Reads with Consecutive Bank Conflicts
+![Waveform showing Coarse-grain Writes then Reads with Bank Conflict](diagrams/waveforms/coarse_write_read_w_bank_conf.png "Course Coarse-Grain Writes then Reads with Bank Conflict")
+<p style="text-align: center;">Simulation Waveform showing coarse-grain writes then reads with bank conflicts on each write and read. Viewed using Gtkwave</p>
 
-### Fine-Grain writes then reads with No Bank Conflict
+The waveform shows that requests can be pipelined. When a bank conlict occurs, the `freeze_inputs` output signal is asserted, prompting the user (perhaps another device) to not change the inputs to the triple ported memory on the next rising edge of the clock. Once the conflicting requests are fulfilled, `freeze_inputs` deasserts, allowing the user the change the inputs to the triple ported memory on the next rising edge of the clock. The waveform also shows the default priority (port1 > port2 > port3) as seen in the staggered outputs on the `port#_data_out` ports. Port 1 and 2's data are returned before port 3's. This priority doesn't change since all ports access the memory with the same frequency.
 
-### Fine-Grain Writes then Readswith Consecutive Bank Conflicts
+### Fine-grain Writes then Reads with Consecutive Bank Conflicts
+
+![Waveform showing Fine-grain writes then reads with bank conflicts](diagrams/waveforms/fine_write_read_w_bank_conf.png "Waveform showing Fine-grain writes then reads with bank conflicts")
+<p style="text-align: center;">Simulation Waveform showing fine-grain writes then reads with bank conflicts on each write and read. Viewed using Gtkwave</p>
+
+
+### Coarse-grain Writes then Reads with No Bank Conflict
+![Waveform showing Coarse-grain writes then reads without bank conflicts](diagrams/waveforms/coarse_write_read_wo_bank_conf.png "Waveform showing Coarse-grain writes then reads without bank conflicts")
+<p style="text-align: center;">Simulation Waveform showing coarse-grain writes then reads without bank conflicts. Viewed using Gtkwave</p>
+
+Since no bank conflicts occur, all requests are handled simultaneously, leading to a lower overall latency.
+
+### Fine-grain writes then reads with No Bank Conflict
+![Waveform showing Fine-grain writes then reads without bank conflicts](diagrams/waveforms/fine_write_read_wo_bank_conf.png "Waveform showing Fine-grain writes then reads without bank conflicts")
+<p style="text-align: center;">Simulation Waveform showing fine-grain writes then reads without bank conflicts. Viewed using Gtkwave</p>
 
 ### Demonstration of Dynamic Priority Arbitration
+![Waveform showing dynamic priority arbitration.](diagrams/waveforms/dynamic_port_priority_demo.png "Waveform showing dynamic priority arbitration.")
+<p style="text-align: center;">Waveform showing dynamic priority arbitration. Viewed using Gtkwave.</p>
 
+The waveform above shows that as the access fequency of each port changes (by controlling when `port#_valid_in` is asserted) so does the priority of with which each port's request is handled. The waveform cycles through all six possible priority scenarios: (123->312->321->231->213->132). It appears that there are only three unique scenarios since the memory module is can execute two reads simultaneous even when the requests cause a bank conflict. 
 
 ## Architecture
+Overview of the modules architecture. Please bear in mind that numerous singals for the sake of simplicity.
 ### Top-level
 ![Top-level architecture of the Triple Ported Memory](diagrams/tripple_ported_memory_arch.png)
 
@@ -70,7 +90,7 @@ Please note that rigorous design exploration has NOT been conducted.
 
 ### **Floorplan**:
 ![](diagrams/physical_design/floor_plan_tight_design.png "Floor Plan showing sram macros and hardened memory bank logic")
-<p style="text-align: center;">Floorplan showing sram macros and memory bank logic macros</p>
+<p style="text-align: center;">Floorplan showing sram macros and memory bank logic macros. Viewed using OpenROAD gui</p>
 The eight larger blocks are the SKY130 sram macros. Two SRAM macros are are needed to provide a 16-bit word size for each bank. The four smaller blocks are the hardnend memory bank logic macros.
 <br> 
 <br>
@@ -79,7 +99,7 @@ The eight larger blocks are the SKY130 sram macros. Two SRAM macros are are need
 ![Fully Routed Design in OpenROAD Gui](diagrams/physical_design/routed_design_openroad.png "Fully Routed Design in OpenROAD Gui")
 <p style="text-align: center;">Fully Routed Design in OpenROAD Gui</p>
 
-### Final GDS 
+### **Final GDS** 
 ![Final GDS rendered in Klayout with some layers hidden](diagrams/physical_design/final_gds_klayout.png "Final GDS rendered in Klayout with some layers hidden")
 <p style="text-align: center;">Final GDS rendered in Klayout</p>
 
