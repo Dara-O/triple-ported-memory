@@ -1,0 +1,43 @@
+{
+    "DESIGN_NAME": "triple_ported_memory",
+    "VERILOG_FILES": "dir::elab.v",
+    "VERILOG_INCLUDE_DIRS": "dir::src/",
+    "CLOCK_PORT": "clk",
+    "CLOCK_PERIOD": 40.0,
+    "DESIGN_IS_CORE": true,
+    "SYNTH_ADDER_TYPE" : "CSA",
+
+    "FP_PDN_CORE_RING" : 1,
+
+    "BASE_SDC_FILE" : "dir::base.sdc",
+
+    "DIE_AREA": "0 0 2550 1960",
+    "CORE_AREA" : "15 15 2535 1945",
+    "FP_SIZING" : "absolute",
+
+    "EXTRA_LEFS": "/openlane/designs/memory_bank_logic/runs/v1/results/final/lef/memory_bank_logic.lef /openlane/designs/triple_ported_memory/sram_macro_files/sky130_sram_1kbytes_1rw1r_8x1024_8.lef",
+    "EXTRA_GDS_FILES": "/openlane/designs/memory_bank_logic/runs/v1/results/final/gds/memory_bank_logic.gds /openlane/designs/triple_ported_memory/sram_macro_files/sky130_sram_1kbytes_1rw1r_8x1024_8.gds",
+    "EXTRA_LIBS": "/openlane/designs/memory_bank_logic/runs/v1/results/final/lib/memory_bank_logic.lib /openlane/designs/triple_ported_memory/sram_macro_files/sky130_sram_1kbytes_1rw1r_8x1024_8_TT_1p8V_25C.lib",
+    "VERILOG_FILES_BLACKBOX": "/openlane/designs/triple_ported_memory/import/memory_bank_logic_bb.v",
+
+    "VDD_NETS": "vccd1",
+    "GND_NETS": "vssd1",
+
+    "FP_PDN_MACRO_HOOKS": "bank_cluster.sram_0_.sram_high vccd1 vssd1 vccd1 vssd1, bank_cluster.sram_1_.sram_high vccd1 vssd1 vccd1 vssd1, bank_cluster.sram_2_.sram_high vccd1 vssd1 vccd1 vssd1, bank_cluster.sram_3_.sram_high vccd1 vssd1 vccd1 vssd1, bank_cluster.sram_0_.sram_low vccd1 vssd1 vccd1 vssd1, bank_cluster.sram_1_.sram_low vccd1 vssd1 vccd1 vssd1, bank_cluster.sram_2_.sram_low vccd1 vssd1 vccd1 vssd1, bank_cluster.sram_3_.sram_low vccd1 vssd1 vccd1 vssd1",
+    "MACRO_PLACEMENT_CFG" : "dir::macro_placement.cfg",
+    "PL_MACRO_HALO" : "10 10",
+
+    "RUN_MAGIC_DRC" : 0,
+
+    "ROUTING_CORES": 8,
+
+    "PL_RESIZER_HOLD_SLACK_MARGIN" : 2,
+    "GLB_RESIZER_HOLD_SLACK_MARGIN" : 2,
+
+    "PL_TARGET_DENSITY" : 0.01, 
+
+    "GLB_RESIZER_ALLOW_SETUP_VIOS" : 1,
+    "PL_RESIZER_ALLOW_SETUP_VIOS" : 1, 
+
+    "RUN_KLAYOUT_XOR": false
+}
