@@ -9,10 +9,8 @@ module clock_gater(
 
     reg clock_prop;
 
-    always @(*) begin
-        if(~clk) begin
-            clock_prop = ~stop_clock;
-        end
+    always @(negedge clk) begin
+        clock_prop <= ~stop_clock;
     end
 
     assign gated_clock = clk & clock_prop;
